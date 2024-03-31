@@ -1,12 +1,19 @@
 package MyTestcases;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FileSystemUtils;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.devtools.v109.database.Database;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -56,7 +63,13 @@ public class MyTestCasess {
 	}
 
 	@Test
-	public void pressonAllNumbersOnlyNumbers() throws MalformedURLException {
+	public void pressonAllNumbersOnlyNumbers() throws IOException, InterruptedException {
+
+		Date date = new Date(); 
+		System.out.println(date);
+		
+		String fileName = date.toString().replace(":", "-"); 
+		
 		driver = new AndroidDriver( new URL("http://127.0.0.1:4723/wd/hub"),caps);
 
 		List<WebElement> allNumbers = driver.findElements(By.className("android.widget.ImageButton"));
@@ -64,6 +77,14 @@ public class MyTestCasess {
 		for(int i = 0 ; i < allNumbers.size();i++) {
 			if(allNumbers.get(i).getAttribute("resource-id").contains("2")||allNumbers.get(i).getAttribute("resource-id").contains("4")||allNumbers.get(i).getAttribute("resource-id").contains("6")||allNumbers.get(i).getAttribute("resource-id").contains("8")||allNumbers.get(i).getAttribute("resource-id").contains("0")) {
 				allNumbers.get(i).click();;
+				
+				TakesScreenshot ts = (TakesScreenshot) driver ;
+				Thread.sleep(3000);
+				File file = ts.getScreenshotAs(OutputType.FILE); 
+				
+				FileUtils.copyFile(file, new File("./src/Pictures/"+fileName+".jpg")); 
+				
+				
 			}
 			
 		}
